@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
 import 'package:front_matter/front_matter.dart' as fm;
-import 'package:front_matter/src/front_matter.dart';
+// import 'package:front_matter/src/front_matter.dart';
 import 'package:front_matter/src/front_matter_document.dart';
 import 'package:front_matter/src/front_matter_exception.dart';
 
@@ -43,20 +43,20 @@ void main() {
 
   test('parses front matter with default options', () {
     var test = Test();
-    var result = fm.parse(test.toString());
+    FrontMatterDocument result = fm.parse(test.toString());
 
     expect(result.toString(), equals(test.toString()));
     expect(result.content, equals(test.content));
-    expect(result.data['foo'], equals(test.data['foo']));
-    expect(result.data['baz'], equals(test.data['baz']));
+    expect(result.data?['foo'], equals(test.data['foo']));
+    expect(result.data?['baz'], equals(test.data['baz']));
   });
 
   test('removes any leading spaces and linebreaks', () {
     var test = Test();
-    var result = fm.parse('    \n\n\n${test.toString()}');
+    FrontMatterDocument result = fm.parse('    \n\n\n${test.toString()}');
 
     expect(result.content, equals(test.content));
-    expect(result.data['foo'], equals(test.data['foo']));
+    expect(result.data?['foo'], equals(test.data['foo']));
   });
 
   test('uses custom delimiters', () {
@@ -64,9 +64,9 @@ void main() {
     var tests = delimiters.map((delimiter) => Test(delimiter: delimiter));
 
     tests.forEach((test) {
-      var result = fm.parse(test.toString(), delimiter: test.delimiter);
+      FrontMatterDocument result = fm.parse(test.toString(), delimiter: test.delimiter);
       expect(result.content, equals(test.content));
-      expect(result.data['foo'], equals(test.data['foo']));
+      expect(result.data?['foo'], equals(test.data['foo']));
     });
   });
 
@@ -77,8 +77,8 @@ void main() {
   });
 
   test('reads a file from disk and parses front matter', () async {
-    var result = await fm.parseFile('example/hello-world.md');
-    expect(result.data['author'], equals('izolate'));
+    FrontMatterDocument result = await fm.parseFile('example/hello-world.md');
+    expect(result.data?['author'], equals('izolate'));
   });
 
   test('throws an error if file not found', () {
